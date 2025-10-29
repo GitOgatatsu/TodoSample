@@ -14,12 +14,18 @@
 		  <th>Todo</th>
 		  <td>
 			<input type="text" th:field="*{todo}">
+			<span th:if="${#fields.hasErrors('todo')}" th:errors="*{todo}" style="color:red;">
+			  エラーがあれば表示
+			</span>
 		  </td>
 		</tr>
 		<tr>
 		  <th>詳細</th>
 		  <td>
 			<textarea rows="5" cols="30" th:field="*{detail}"></textarea>
+			<span th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}" style="color:red;">
+			  エラーがあれば表示
+			</span>
 		  </td>
 		</tr>
 	  </table>

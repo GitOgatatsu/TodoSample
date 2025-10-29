@@ -2,6 +2,8 @@ package com.example.webapp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +57,15 @@ public class TodoController {
   
   
   @PostMapping( "/todos/save" )
-  public String create( TodoForm todoForm, RedirectAttributes attributes) {
+  public String create( @Validated TodoForm todoForm,
+      BindingResult bindingResult,
+      RedirectAttributes attributes ) {
+    
+    System.out.println( bindingResult );
+    if ( bindingResult.hasErrors() ) {
+      todoForm.setIsNew( true );
+      return "todo/form";
+    }
     Todo todo = TodoTools.TodoF2E( todoForm );
     todoService.insertTodo( todo );
     attributes.addFlashAttribute( "message", "新しいTodoが作成されました" );
@@ -71,16 +81,22 @@ public class TodoController {
       TodoForm todoForm = TodoTools.TodoE2F( todo );
       model.addAttribute( "todoForm", todoForm );
       return "todo/form";
-    } else {
-      attributes.addFlashAttribute( "errorMessage", "対象データがありません" );
-      return "redirect:/todos";
     }
+    attributes.addFlashAttribute( "errorMessage", "対象データがありません" );
+    return "redirect:/todos";
   }
   
   
   
   @PostMapping( "/todos/update" )
-  public String update( TodoForm todoForm, RedirectAttributes attributes ) {
+  public String update( @Validated TodoForm todoForm,
+      BindingResult bindingResult,
+      RedirectAttributes attributes ) {
+    
+    if ( bindingResult.hasErrors() ) {
+      todoForm.setIsNew( false );
+      return "todo/form";
+    }
     Todo todo = TodoTools.TodoF2E( todoForm );
     todoService.updateTodo( todo );
     attributes.addFlashAttribute( "message", "Todoが更新されました" );

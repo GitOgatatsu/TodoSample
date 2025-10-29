@@ -8,7 +8,7 @@ public class TodoTools {
   public static TodoForm TodoE2F( Todo todo ) {
     TodoForm todoForm = new TodoForm();
     todoForm.setTodo( todo.getTodo() );
-    todoForm.setTodo( todo.getDetail() );
+    todoForm.setDetail( todo.getDetail() );
     todoForm.setIsNew( false );
     return todoForm;
   }
